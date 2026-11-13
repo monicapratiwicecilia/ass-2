@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig>
+  <Tracking>
+    <ImageTarget name="kasus7_metanol" size="0.061000 0.082000" />
+    <ImageTarget name="kasus6_gantungdiri" size="0.061000 0.082000" />
+    <ImageTarget name="kasus5_airlaut" size="0.061000 0.082000" />
+    <ImageTarget name="kasus4_airtawar" size="0.061000 0.082432" />
+    <ImageTarget name="kasus3_kebunterbuka" size="0.061000 0.082000" />
+    <ImageTarget name="kasus2_gudangpabrik" size="0.061000 0.082000" />
+    <ImageTarget name="kasus1_kamarmandi" size="0.061000 0.082000" />
+    <ImageTarget name="kacapembesar_kepala" size="0.061000 0.081696" />
+    <ImageTarget name="sendi_perut" size="0.061000 0.081696" />
+    <ImageTarget name="ujilebam_dada" size="0.061000 0.081333" />
+    <ImageTarget name="termometer_pelvis" size="0.061000 0.081333" />
+    <ImageTarget name="tubuh" size="0.420000 0.288750" />
+  </Tracking>
+</QCARConfig>
