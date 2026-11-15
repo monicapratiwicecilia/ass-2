@@ -217,9 +217,18 @@ public class CaseColorManager : MonoBehaviour
     public void RevealRegion(BodyRegion region)
     {
         if (activeCase < 0) return;           // belum scan kasus
-        if (!revealed.Add(region)) return;    // bagian ini sudah dibuka
 
         var c = forensicCases[activeCase];
+
+        // Kartu pelvis = termometer (selalu aktifkan & animasikan tiap discan)
+        if (region == BodyRegion.Pelvis && thermometer)
+        {
+            thermometer.SetActive(true);
+            StopAllCoroutines();
+            StartCoroutine(AnimateTemp(startTemp, c.bodyTemp));
+        }
+
+        if (!revealed.Add(region)) return;    // bagian ini sudah dibuka teksturnya
 
         if (c.useSkinTint && !tintApplied)
         {
@@ -229,24 +238,16 @@ public class CaseColorManager : MonoBehaviour
 
         // Overlay lukisan dulu, bercak di atasnya
         foreach (var o in c.overlays)
-            if (o.region == region) ApplyOverlay(o);
+            if (o.region == region || (region == BodyRegion.Dada && (o.region == BodyRegion.Punggung || o.region == BodyRegion.Tungkai))) ApplyOverlay(o);
 
         foreach (var s in c.spots)
-            if (s.region == region) PaintScattered(s, c);
+            if (s.region == region || (region == BodyRegion.Dada && (s.region == BodyRegion.Punggung || s.region == BodyRegion.Tungkai))) PaintScattered(s, c);
 
         runtimeTex.Apply();
 
         string ft, fb;
         if (OnFinding != null && TryGetText(region, out ft, out fb))
             OnFinding(activeCase, region, ft, fb);
-
-        // Kartu pelvis = termometer
-        if (region == BodyRegion.Pelvis && thermometer)
-        {
-            thermometer.SetActive(true);
-            StopAllCoroutines();
-            StartCoroutine(AnimateTemp(startTemp, c.bodyTemp));
-        }
     }
 
     IEnumerator AnimateTemp(float from, float to)

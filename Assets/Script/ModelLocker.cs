@@ -4,7 +4,7 @@ using Vuforia;
 public class ModelLocker : MonoBehaviour
 {
     public Transform model;              // seret 3d_male ke sini
-    public bool lockOnFirstDetect = true;
+    public bool lockOnFirstDetect = false; // Matikan default agar model 3D tetap menempel di target dan tidak miring di udara
     public float lockDelay = 0.5f;       // jeda supaya tracking stabil dulu
 
     ObserverBehaviour obs;
@@ -16,10 +16,13 @@ public class ModelLocker : MonoBehaviour
     void Awake()
     {
         obs = GetComponent<ObserverBehaviour>();
-        obs.OnTargetStatusChanged += OnStatus;
-        savedLocalPos = model.localPosition;
-        savedLocalRot = model.localRotation;
-        savedLocalScale = model.localScale;
+        if (obs != null) obs.OnTargetStatusChanged += OnStatus;
+        if (model != null)
+        {
+            savedLocalPos = model.localPosition;
+            savedLocalRot = model.localRotation;
+            savedLocalScale = model.localScale;
+        }
     }
 
     void OnDestroy()
@@ -36,7 +39,7 @@ public class ModelLocker : MonoBehaviour
 
     public void Lock()
     {
-        if (locked) return;
+        if (locked || model == null) return;
         model.SetParent(null, true);     // true = posisi dunia dipertahankan
         locked = true;
     }
@@ -45,10 +48,13 @@ public class ModelLocker : MonoBehaviour
     public void Unlock()
     {
         CancelInvoke(nameof(Lock));
-        model.SetParent(transform, false);
-        model.localPosition = savedLocalPos;
-        model.localRotation = savedLocalRot;
-        model.localScale = savedLocalScale;
+        if (model != null)
+        {
+            model.SetParent(transform, false);
+            model.localPosition = savedLocalPos;
+            model.localRotation = savedLocalRot;
+            model.localScale = savedLocalScale;
+        }
         locked = false;
     }
 }
