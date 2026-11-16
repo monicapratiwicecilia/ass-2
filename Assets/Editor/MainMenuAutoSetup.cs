@@ -47,8 +47,17 @@ public static class MainMenuAutoSetup
             return;
         }
 
-        // 3. Jalankan MainMenuBuilder
-        MainMenuBuilder.BuildMainMenu();
+        // 3. Verifikasi apakah Canvas MainMenu sudah ada. Jangan pernah menimpa layout kustom pengguna.
+        GameObject existingCanvas = FindInSceneRootOrChildren("Canvas");
+        if (existingCanvas == null)
+        {
+            Debug.Log("[MainMenuAutoSetup] Canvas belum ada, membuat Main Menu awal...");
+            MainMenuBuilder.BuildMainMenuDirect();
+        }
+        else
+        {
+            Debug.Log("[MainMenuAutoSetup] Canvas Main Menu sudah ada, mempertahankan layout kustom pengguna.");
+        }
 
         // 4. Cari MenuController dan verifikasi komponen MainMenu
         GameObject menuControllerGo = FindInSceneRootOrChildren("MenuController");

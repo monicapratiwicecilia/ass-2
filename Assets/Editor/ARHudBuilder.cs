@@ -346,7 +346,7 @@ public static class ARHudBuilder
 
         // Tambahkan Card Langkah-Langkah Rapi
         CreateGuideStepCard(cnt.transform, font, roundedSprite, "01", "TAHAP 1: SCAN KARTU KASUS TKP", "SKENARIO",
-            "Arahkan kamera ke salah satu kartu kasus (Kasus 1: Kamar Mandi, Kasus 2: Gudang Pabrik, atau Kasus 3: Kebun Terbuka) untuk memuat data kronologi dan suhu lingkungan TKP (°C).");
+            "Arahkan kamera ke salah satu kartu kasus (Kasus 1 hingga Kasus 7) untuk memuat data kronologi dan suhu lingkungan TKP (°C).");
 
         CreateGuideStepCard(cnt.transform, font, roundedSprite, "02", "TAHAP 2: SCAN BLUEPRINT TUBUH", "TARGET ANATOMI",
             "Arahkan kamera ke kartu Blueprint Tubuh. Avatar 3D jenazah akan muncul stabil di atas kartu.\n• <b>Putar Tubuh:</b> Geser layar dengan 1 jari untuk rotasi 360°.\n• <b>Zoom Detail:</b> Gunakan cubitan 2 jari (pinch) untuk memperbesar anatomi.");

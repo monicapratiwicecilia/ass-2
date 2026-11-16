@@ -28,8 +28,24 @@ public static class MainMenuBuilder
     private static readonly Color ColorDangerBg    = new Color(36f / 255f, 15f / 255f, 15f / 255f, 1f);     // #240F0F
     private static readonly Color ColorDangerText  = new Color(248f / 255f, 113f / 255f, 113f / 255f, 1f); // #F87171
 
-    [MenuItem("Tools/Build Main Menu")]
+    [MenuItem("Tools/Reset & Rebuild Main Menu (Dangerous)", false, 100)]
     public static void BuildMainMenu()
+    {
+        if (!Application.isBatchMode)
+        {
+            if (!EditorUtility.DisplayDialog("Konfirmasi Reset Main Menu",
+                "PERINGATAN: Perintah ini akan menghapus dan membuat ulang seluruh elemen Canvas Main Menu dari awal, yang akan menimpa penyesuaian posisi/layout yang sudah Anda atur.\n\nApakah Anda benar-benar ingin mereset layout ke pengaturan awal?",
+                "Ya, Reset", "Batal (Jangan Reset)"))
+            {
+                Debug.Log("[MainMenuBuilder] Pembuatan dibatalkan: Layout Main Menu tetap aman dan tidak diubah.");
+                return;
+            }
+        }
+
+        BuildMainMenuDirect();
+    }
+
+    public static void BuildMainMenuDirect()
     {
         var activeScene = EditorSceneManager.GetActiveScene();
         Debug.Log($"[MainMenuBuilder] Membangun Main Menu di scene: {activeScene.name}...");
@@ -159,7 +175,7 @@ public static class MainMenuBuilder
         skipRect.anchoredPosition = new Vector2(-40f, -50f);
 
         // =====================================================================
-        // PANEL 1: PANEL MENU (MENU UTAMA - RAPI, MENARIK & TIDAK BERANTAKAN)
+        // PANEL 1: PANEL MENU (MENU UTAMA - TATA LETAK LEGA, FULL SCREEN & SEIMBANG)
         // =====================================================================
         var panelMenuGo = CreateUIObject("PanelMenu", canvasGo.transform);
         SetStretch(panelMenuGo.GetComponent<RectTransform>());
@@ -172,17 +188,15 @@ public static class MainMenuBuilder
         ccRect.sizeDelta = new Vector2(940f, 1680f);
         ccRect.anchoredPosition = Vector2.zero;
 
-        var ccVlg = centerContainer.AddComponent<VerticalLayoutGroup>();
-        ccVlg.padding = new RectOffset(10, 10, 20, 20);
-        ccVlg.spacing = 26;
-        ccVlg.childControlWidth = true;
-        ccVlg.childControlHeight = false;
-        ccVlg.childForceExpandWidth = true;
-        ccVlg.childForceExpandHeight = false;
-        ccVlg.childAlignment = TextAnchor.MiddleCenter;
-
         // 1. Plat Putih 3 Logo (Atas - Bersih & Rapi)
         var logoPlate = CreateCard("LogoPlate", centerContainer.transform, 110f, Color.white, roundedSprite);
+        var lpRect = logoPlate.GetComponent<RectTransform>();
+        lpRect.anchorMin = new Vector2(0f, 1f);
+        lpRect.anchorMax = new Vector2(0f, 1f);
+        lpRect.pivot = new Vector2(0.5f, 0.5f);
+        lpRect.sizeDelta = new Vector2(940f, 110f);
+        lpRect.anchoredPosition = new Vector2(470f, -72f);
+
         var lpHlg = logoPlate.AddComponent<HorizontalLayoutGroup>();
         lpHlg.padding = new RectOffset(20, 20, 12, 12);
         lpHlg.spacing = 22;
@@ -200,6 +214,13 @@ public static class MainMenuBuilder
 
         // 2. Judul & Subjudul (Tipografi Taktis Modern)
         var titleBox = CreateCard("TitleBox", centerContainer.transform, 145f, Color.clear, null);
+        var tbRect = titleBox.GetComponent<RectTransform>();
+        tbRect.anchorMin = new Vector2(0f, 1f);
+        tbRect.anchorMax = new Vector2(0f, 1f);
+        tbRect.pivot = new Vector2(0.5f, 0.5f);
+        tbRect.sizeDelta = new Vector2(940f, 145f);
+        tbRect.anchoredPosition = new Vector2(470f, -290f);
+
         var tbVlg = titleBox.AddComponent<VerticalLayoutGroup>();
         tbVlg.spacing = 6;
         tbVlg.childControlWidth = true;
@@ -213,38 +234,67 @@ public static class MainMenuBuilder
         CreateText("SubTitle", titleBox.transform, font, 20f, TextAlignmentOptions.Center, ColorTextBody,
             "FK TELKOM UNIVERSITY × TIM A.U.T.O.P.S.Y.");
 
-        // 3. Tombol-Tombol Menu Utama (Sleek, Jelas & Berjenjang)
+        // 3. Tombol-Tombol Menu Utama (Sleek, Jelas & Berjarak Rapi)
         var buttonGroup = CreateUIObject("ButtonGroup", centerContainer.transform);
-        var bgVlg = buttonGroup.AddComponent<VerticalLayoutGroup>();
-        bgVlg.spacing = 20;
-        bgVlg.childControlWidth = true;
-        bgVlg.childControlHeight = false;
-        bgVlg.childForceExpandWidth = true;
-        bgVlg.childForceExpandHeight = false;
-        bgVlg.childAlignment = TextAnchor.MiddleCenter;
+        var bgRect = buttonGroup.GetComponent<RectTransform>();
+        bgRect.anchorMin = new Vector2(0f, 1f);
+        bgRect.anchorMax = new Vector2(0f, 1f);
+        bgRect.pivot = new Vector2(0.5f, 0.5f);
+        bgRect.sizeDelta = new Vector2(920f, 720f);
+        bgRect.anchoredPosition = new Vector2(470f, -943f);
 
-        // Tombol 1: MULAI INVESTIGASI AR (Hero Button - Menonjol dengan Aksen Biru)
+        // Tombol 1: MULAI INVESTIGASI AR
         var btnMulai = CreateStyledButton("BtnMulai", buttonGroup.transform, font,
             "<b><size=30>[ ▶ ]  MULAI INVESTIGASI AR</size></b>\n<size=17><color=#BFDBFE>Scan Kartu Tubuh & Kasus TKP</color></size>",
             ColorBlueAccent, Color.white, 920f, 120f, heroSprite ?? roundedSprite);
+        var bmRect = btnMulai.GetComponent<RectTransform>();
+        bmRect.anchorMin = new Vector2(0f, 1f);
+        bmRect.anchorMax = new Vector2(0f, 1f);
+        bmRect.pivot = new Vector2(0.5f, 0.5f);
+        bmRect.sizeDelta = new Vector2(920f, 120f);
+        bmRect.anchoredPosition = new Vector2(460f, -85f);
 
         // Tombol 2: MANUAL BOOK
         var btnManual = CreateStyledButton("BtnManualBook", buttonGroup.transform, font,
             "<b><size=26>[ ≡ ]  BUKU PANDUAN DIGITAL</size></b>\n<size=15><color=#94A3B8>Penjelasan 6 Kartu & Alur Pemeriksaan Medis</color></size>",
             ColorCardItem, ColorTextBody, 920f, 100f, roundedSprite);
+        var bmanRect = btnManual.GetComponent<RectTransform>();
+        bmanRect.anchorMin = new Vector2(0f, 1f);
+        bmanRect.anchorMax = new Vector2(0f, 1f);
+        bmanRect.pivot = new Vector2(0.5f, 0.5f);
+        bmanRect.sizeDelta = new Vector2(920f, 100f);
+        bmanRect.anchoredPosition = new Vector2(460f, -228f);
 
         // Tombol 3: TENTANG PENGEMBANG
         var btnAbout = CreateStyledButton("BtnAbout", buttonGroup.transform, font,
             "<b><size=26>[ ℹ ]  TENTANG PENGEMBANG</size></b>\n<size=15><color=#94A3B8>Profil Tim A.U.T.O.P.S.Y. & Pembimbing</color></size>",
             ColorCardItem, ColorTextBody, 920f, 100f, roundedSprite);
+        var baRect = btnAbout.GetComponent<RectTransform>();
+        baRect.anchorMin = new Vector2(0f, 1f);
+        baRect.anchorMax = new Vector2(0f, 1f);
+        baRect.pivot = new Vector2(0.5f, 0.5f);
+        baRect.sizeDelta = new Vector2(920f, 100f);
+        baRect.anchoredPosition = new Vector2(460f, -358f);
 
-        // Tombol 4: KELUAR
+        // Tombol 4: KELUAR (Diposisikan di Bawah dengan Jeda Ruang Rapi)
         var btnQuit = CreateStyledButton("BtnQuit", buttonGroup.transform, font,
             "<b><size=22><color=#F87171>[ ✕ ]  KELUAR APLIKASI</color></size></b>",
             ColorDangerBg, ColorDangerText, 920f, 85f, roundedSprite);
+        var bqRect = btnQuit.GetComponent<RectTransform>();
+        bqRect.anchorMin = new Vector2(0f, 1f);
+        bqRect.anchorMax = new Vector2(0f, 1f);
+        bqRect.pivot = new Vector2(0.5f, 0.5f);
+        bqRect.sizeDelta = new Vector2(920f, 85f);
+        bqRect.anchoredPosition = new Vector2(460f, -616f);
 
-        // 4. Status Bar Bawah (Minimalis & Elegan)
+        // 4. Status Bar Bawah (Minimalis & Elegan di Bagian Bawah Layar)
         var footerBox = CreateCard("FooterBox", centerContainer.transform, 75f, ColorCardItem, roundedSprite);
+        var fbRect = footerBox.GetComponent<RectTransform>();
+        fbRect.anchorMin = new Vector2(0f, 1f);
+        fbRect.anchorMax = new Vector2(0f, 1f);
+        fbRect.pivot = new Vector2(0.5f, 0.5f);
+        fbRect.sizeDelta = new Vector2(940f, 75f);
+        fbRect.anchoredPosition = new Vector2(470f, -1607f);
         var fbVlg = footerBox.AddComponent<VerticalLayoutGroup>();
         fbVlg.padding = new RectOffset(15, 15, 10, 10);
         fbVlg.spacing = 3;
